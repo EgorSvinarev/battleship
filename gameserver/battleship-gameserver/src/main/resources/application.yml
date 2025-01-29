@@ -1,0 +1,7 @@
+application:
+  server:
+    threads:
+      worker-threads: ${server.threads.worker-threads}
+      eventloop-threads: ${server.threads.eventloop-threads}
+      game-threads: ${server.threads.game-threads}
+    port: ${server.port}

@@ -1,0 +1,55 @@
+version: "3.8"
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  frontend:
+    image: battleship-frontend:latest
+    environment:
+      - REACT_APP_BASE_URL=${REACT_APP_BASE_URL:-http://backend:8080}
+      - REACT_APP_WEBSOCKETS_URL=${REACT_APP_WEBSOCKETS_URL:-ws://gameserver:8081/game}
+    networks:
+      - app-network
+    ports:
+      - "3000:30002"
+
+  backend:
+    image: battleship-backend:latest
+    networks:
+      - app-network
+    environment:
+      - tokens.secret=${tokens_secret:-asdasdasdasdasdasdasdasdasdasdsadasdasdjasdiasidye89qe3123123137901237y2hiodsjakdhk}
+      - db.username=${db_username:-postgres}
+      - db.password=${db_password:-battleship}
+      - db.url=${db_url:-postgres:5432/battleship}
+    ports:
+      - "8080:8080"
+
+  gameserver:
+    image: battleship-gameserver:latest
+    networks:
+      - app-network
+    environment:
+      - server.threads.worker-threads=${server_threads_worker_threads:-2}
+      - server.threads.eventloop-threads=${server_threads_eventloop_threads:-2}
+      - server.threads.game-threads=${server_threads_game_threads:-2}
+      - server.port=${server_port:-8081}
+    ports:
+      - "8081:8081"
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASS:-battleship}
+      POSTGRES_DB: ${DATABASE_NAME:-battleship}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

@@ -1,0 +1,33 @@
+name: Auto Deploy in VPS after Push in Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  deploy:
+    name: Deploy project
+    permissions:
+      deployments: write
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+      - name: Deploy Applcation
+        # run: |
+        uses: D3rHase/ssh-command-action@v0.2.2
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: 22
+          script: |
+            git config --global url."https://${{ secrets.PERSONAL_GITHUB_TOKEN }}:@github.com".insteadOf "https://github.com"
+            mkdir -p ./battleship/backend
+            cd ./battleship/backend
+            git pull origin main

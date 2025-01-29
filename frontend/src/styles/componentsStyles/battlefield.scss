@@ -1,0 +1,77 @@
+.battlefield {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: whitesmoke;
+}
+
+.battlefield-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
+
+.battlefield {
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.battlefield_table {
+  height: 100%;
+}
+
+.battlefield th,
+.battlefield td {
+  border: 1px solid blue;
+  width: 40px;
+  text-align: center;
+}
+
+.battlefield th {
+  background-color: lightgray;
+}
+
+.battlefield td {
+  background-color: white;
+  position: relative;
+}
+
+/* Пример расположения кораблей */
+.battlefield td.ship {
+  background-color: lightblue;
+  border: 2px solid blue;
+}
+
+.battlefield td.miss {
+  background-color: #c6d5df;
+}
+
+.battlefield td.hit {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 2px solid red;
+}
+
+.battlefield td.hit::before,
+.battlefield td.hit::after {
+  content: '';
+  position: absolute;
+  background-color: black;
+  width: 2px; /* Толщина линии */
+  height: 100%;
+  top: 0;
+  left: 50%;
+  transform-origin: center;
+}
+
+.battlefield td.hit::before {
+  transform: rotate(45deg);
+}
+
+.battlefield td.hit::after {
+  transform: rotate(-45deg);
+}
+
+.battlefield_cell_highlight-on-hover:hover {
+  background-color: rgba(0, 0, 255, 0.2);
+  cursor: pointer;
+}

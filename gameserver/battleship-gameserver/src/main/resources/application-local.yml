@@ -1,0 +1,7 @@
+application:
+  server:
+    threads:
+      worker-threads: 2
+      eventloop-threads: 2
+      game-threads: 2
+    port: 8081
